@@ -7,11 +7,20 @@ import Link from "next/link";
 import { useQuery } from "react-query";
 
 export default function UserList() {
-  const { data, isLoading, error } = useQuery('users', async () => {
+  const { data, isLoading, isFetching, error } = useQuery('users', async () => {
     const response = await fetch('http://localhost:3000/api/users')
-    const data = response.json()
+    const data = await response.json()
     
-    return data;
+    const user = data.users.map(user => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        createdAt: new Date(user.createdAt).toLocaleString()
+      }
+    })
+
+    return user;
   })
 
   const isWideVersion = useBreakpointValue({
@@ -28,7 +37,10 @@ export default function UserList() {
 
         <Box flex="1" borderRadius={8} bg="gray.800" p={["6", "8"]}>
           <Flex mb="8" justify="space-between" align="center">
-            <Heading size="lg" fontWeight="normal">Usuários</Heading>
+            <Heading size="lg" fontWeight="normal">
+              Usuários
+              {!isLoading && isFetching && <Spinner size="sm" color="gray.500" ml="4"/>}
+            </Heading>
 
             <Link href="/users/create" passHref>
               <Button
@@ -68,17 +80,19 @@ export default function UserList() {
             </Thead>
 
             <Tbody>
-              <Tr>
+              {data.map(user => {
+                return (
+                  <Tr key={user.id}>
                 <Td px={["4", "4", "6"]}>
                   <Checkbox colorScheme="pink" />
                 </Td>
                 <Td>
                   <Box>
-                    <Text fontWeight="bold">Delacyr Ferreira</Text>
-                    <Text fontSize="small" color="gray.300">delacyr@gmail.com</Text>
+                    <Text fontWeight="bold">{user.name}</Text>
+                    <Text fontSize="small" color="gray.300">{user.email}</Text>
                   </Box>
                 </Td>
-                {isWideVersion && <Td>13 de agosto de 2021</Td>}
+                {isWideVersion && <Td>{user.createdAt}</Td>}
 
                 <Td>
                   <Button
@@ -97,6 +111,8 @@ export default function UserList() {
                 </Td>
 
               </Tr>
+                )
+              })}
             </Tbody>
           </Table>
           <Pagination />
