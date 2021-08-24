@@ -15,6 +15,7 @@
     "@emotion/styled": "^11.3.0",
     "@hookform/resolvers": "^2.7.1",
     "apexcharts": "^3.27.3",
+    "axios": "^0.21.1",
     "babel-plugin-inline-react-svg": "^2.0.1",
     "babel-plugin-styled-components": "^1.13.2",
     "framer-motion": "^4.1.17",
