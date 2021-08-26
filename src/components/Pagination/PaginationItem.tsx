@@ -35,7 +35,7 @@ export function PaginationItem({
       bg="gray.700"
       _hover={{ bg: "gray.500" }}
     >
-      2
+      {number}
     </Button>
   );
 
